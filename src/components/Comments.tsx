@@ -35,6 +35,7 @@ export function Comments() {
         ) : (
           <button
             class="font-bold text-sky-600 hover:underline"
+            type="button"
             onClick={handlePreviousPage}
           >
             &laquo;
@@ -46,6 +47,7 @@ export function Comments() {
         ) : (
           <button
             class="font-bold text-sky-600 hover:underline"
+            type="button"
             onClick={handleNextPage}
           >
             &raquo;
@@ -130,6 +132,7 @@ function Comment({
         ) : (
           <button
             class="font-bold text-sky-600 hover:underline"
+            type="button"
             onClick={handleMarkAsRead}
           >
             Mark as read

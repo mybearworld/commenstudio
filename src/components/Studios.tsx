@@ -44,6 +44,7 @@ export function Studios() {
               />
               <button
                 onClick={(e) => handleStudioDelete(index)}
+                type="button"
                 class="font-bold text-sky-600 hover:underline"
               >
                 Delete

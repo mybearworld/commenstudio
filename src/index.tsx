@@ -50,6 +50,7 @@ function ResetReadDate() {
   return (
     <button
       class="font-bold text-sky-600 hover:underline"
+      type="button"
       onClick={handleClick}
     >
       Reset read date
