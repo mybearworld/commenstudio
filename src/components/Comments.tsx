@@ -118,7 +118,7 @@ function Comment({
         </a>
         {studio in studioColors ? (
           <span
-            class="ml-2 inline-block h-3 w-3 rounded-full"
+            class="ml-2 inline-block h-3 w-3 rounded-full border-[1px] border-black"
             style={{ backgroundColor: studioColors[studio].color }}
           ></span>
         ) : null}
