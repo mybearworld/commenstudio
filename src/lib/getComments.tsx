@@ -23,7 +23,7 @@ export const getComments = async (studios: number[], page: number = 0) => {
     [...new Set(studios)].map(async (studio) => {
       const comments = await (
         await fetch(
-          `https://corsproxy.io?https://api.scratch.mit.edu/studios/${studio}/comments?limit=40&offset=${
+          `https://api.codetabs.com/v1/proxy?quest=https://api.scratch.mit.edu/studios/${studio}/comments?limit=40&offset=${
             40 * page
           }`,
         )
