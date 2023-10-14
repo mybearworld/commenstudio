@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { studiosAtom } from "../atoms";
+import { studiosAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { z } from "zod";
 import gobo from "../emoji/gobo.png";
