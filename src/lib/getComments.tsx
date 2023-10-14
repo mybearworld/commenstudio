@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+
 const commentResponseSchema = z.object({
   id: z.number(),
   content: z.string(),
@@ -27,9 +28,13 @@ export const getComments = async (studios: number[], page: number = 0) => {
           }`,
         )
       ).json();
-      return commentResponseSchema
-        .array()
-        .parse(comments)
+      const parsedComments = commentResponseSchema
+      .array()
+      .safeParse(comments);
+      if (!parsedComments.success) {
+        return [];
+      }
+      return parsedComments.data
         .map((comment) => ({ ...comment, studio }));
     }),
   );

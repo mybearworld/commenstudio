@@ -1,21 +1,10 @@
 import { useAtom } from "jotai";
 import { studiosAtom } from "../lib/atoms";
+import { studioExists } from "../lib/studioExists";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 export function Studios() {
   const [studios, setStudios] = useAtom(studiosAtom);
-
-  const handleInput = (target: EventTarget, index: number) => {
-    const element = target as HTMLInputElement;
-    const value = Number(element.value);
-    if (value.toString() !== element.value) {
-      element.value = studios[index].toString();
-    }
-    setStudios([
-      ...studios.slice(0, index),
-      value,
-      ...studios.slice(index + 1),
-    ]);
-  };
 
   const handleNewStudio = () => {
     const newStudios = [...studios];
@@ -34,14 +23,7 @@ export function Studios() {
         <ul class="contents">
           {studios.map((studio, index) => (
             <li class="flex w-full justify-between gap-2" key={index}>
-              <input
-                class="w-32 rounded-xl bg-stone-300 px-2 py-1"
-                type="number"
-                value={studio}
-                onChange={(e) =>
-                  handleInput(e.target as HTMLInputElement, index)
-                }
-              />
+              <StudioInput studio={studio} index={index} />
               <button
                 onClick={(e) => handleStudioDelete(index)}
                 type="button"
@@ -61,5 +43,55 @@ export function Studios() {
         New
       </button>
     </div>
+  );
+}
+
+function StudioInput({ studio, index }: { studio: number; index: number }) {
+  const [studios, setStudios] = useAtom(studiosAtom);
+  const [invalid, setInvalid] = useState(true);
+  const element = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!element.current) {
+        return;
+      }
+      if (!(await studioExists(Number(element.current.value)))) {
+        setInvalid(true);
+      }
+    })();
+  });
+
+  const handleInput = async () => {
+    if (!element.current) {
+      return;
+    }
+    const value = element.current.value;
+    const numberValue = Number(value);
+    if (value.toString() !== value) {
+      element.current.value = studios[index].toString();
+    }
+    if (!(await studioExists(numberValue))) {
+      setInvalid(true);
+    }
+    setStudios([
+      ...studios.slice(0, index),
+      numberValue,
+      ...studios.slice(index + 1),
+    ]);
+    if (invalid) {
+      setInvalid(false);
+    }
+  };
+  return (
+    <input
+      class={`w-32 rounded-xl bg-stone-300 px-2 py-1 ${
+        invalid ? "ring ring-red-400 focus-visible:outline-red-700" : ""
+      }`}
+      type="number"
+      value={studio}
+      onChange={(e) => handleInput()}
+      ref={element}
+    />
   );
 }
