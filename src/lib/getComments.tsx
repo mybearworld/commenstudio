@@ -34,6 +34,16 @@ export const getComments = async (studios: number[], page: number = 0) => {
     }),
   );
   let allComments: CommentRepresentation[] = [];
-  allComments = allComments.concat(...studioComments);
+  allComments = allComments.concat(...studioComments).sort((a, b) => {
+    const dateA = new Date(a.datetime_created).getTime();
+    const dateB = new Date(b.datetime_created).getTime();
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+    return 0;
+  });
   return allComments;
 };
