@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { studiosAtom } from "./atoms";
+import { studiosAtom } from "../atoms";
 
 export function Studios() {
   const [studios, setStudios] = useAtom(studiosAtom);

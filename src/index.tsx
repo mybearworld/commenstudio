@@ -1,5 +1,5 @@
 import { render } from "preact";
-import { Studios } from "./Studios";
+import { Studios } from "./components/Studios";
 import "./index.css";
 
 export function App() {
