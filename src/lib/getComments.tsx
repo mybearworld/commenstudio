@@ -19,7 +19,7 @@ export type CommentRepresentation = z.infer<typeof commentResponseSchema> & {
 
 export const getComments = async (studios: number[], page: number = 0) => {
   const studioComments = await Promise.all(
-    studios.map(async (studio) => {
+    [...new Set(studios)].map(async (studio) => {
       const comments = await (
         await fetch(
           `https://corsproxy.io?https://api.scratch.mit.edu/studios/${studio}/comments?limit=40&offset=${
