@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { studiosAtom, readToAtom } from "../lib/atoms";
+import { studiosAtom, studioColorsAtom, readToAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
 import { formatRelative } from "../lib/formatRelative";
@@ -80,6 +80,7 @@ function Comment({
   reply_count,
   studio,
 }: CommentRepresentation) {
+  const [studioColors] = useAtom(studioColorsAtom);
   const [readTo, setReadTo] = useAtom(readToAtom);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const emojiContent = content
@@ -115,6 +116,12 @@ function Comment({
         <a href={userLink} class="font-bold text-sky-600 hover:underline">
           {author.username}
         </a>
+        {studio in studioColors ? (
+          <span
+            class="ml-2 inline-block h-3 w-3 rounded-full"
+            style={{ backgroundColor: studioColors[studio].color }}
+          ></span>
+        ) : null}
         <p
           dangerouslySetInnerHTML={{ __html: emojiContent }}
           style={{ overflowWrap: "anywhere" }}
