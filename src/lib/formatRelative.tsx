@@ -1,7 +1,7 @@
 // The logic of this code is based on Scratch's code:
 // https://github.com/scratchfoundation/scratch-www/blob/develop/src/lib/select-unit.js
 
-const formatter = new Intl.RelativeTimeFormat("en", { style: "short" });
+const formatter = new Intl.RelativeTimeFormat("en");
 
 const MILLISECONDS_PER_SECOND = 1000;
 const SECONDS_PER_MINUTE = 60;
