@@ -33,9 +33,9 @@ export function Studios() {
       {studios.length > 0 ? (
         <ul class="contents">
           {studios.map((studio, index) => (
-            <li class="flex w-full gap-2" key={index}>
+            <li class="flex w-full justify-between gap-2" key={index}>
               <input
-                class="w-full shrink rounded-xl bg-stone-300 px-2 py-1"
+                class="w-32 rounded-xl bg-stone-300 px-2 py-1"
                 type="number"
                 value={studio}
                 onChange={(e) =>

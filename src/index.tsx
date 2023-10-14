@@ -26,7 +26,7 @@ export function App() {
             <ResetReadDate />
           </div>
         </div>
-        <div class="">
+        <div class="flex-1">
           <Comments />
         </div>
       </div>

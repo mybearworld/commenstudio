@@ -27,7 +27,7 @@ export function Comments() {
   };
 
   return (
-    <div class="space-y-2">
+    <div class="flex flex-col gap-2">
       <h2 class="text-xl font-bold">
         Comments (
         {page === 0 ? (
@@ -97,7 +97,7 @@ function Comment({
   };
 
   return (
-    <div class="flex items-center gap-2 rounded-xl bg-stone-300 px-2 py-1">
+    <div class="flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1">
       <a href={userLink}>
         <img
           class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)]"
