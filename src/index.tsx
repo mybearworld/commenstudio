@@ -7,10 +7,10 @@ export function App() {
     <div>
       <header class="mb-2 flex items-center gap-2">
         <h1 class="text-3xl font-bold">Communistudio</h1>
-        <nav class="font-bold text-sky-600">
+        <nav>
           <a
             href="https://github.com/mybearworld/communistudio"
-            class="hover:underline"
+            class="font-bold text-sky-600 hover:underline"
           >
             Github
           </a>
