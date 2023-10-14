@@ -17,11 +17,11 @@ export function App() {
           </a>
         </nav>
       </header>
-      <div class="flex gap-8">
+      <div class="flex max-w-full gap-8">
         <div class="min-w-[theme(spacing.48)]">
           <Studios />
         </div>
-        <div class="flex-grow">
+        <div class="">
           <Comments />
         </div>
       </div>
