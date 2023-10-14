@@ -1,5 +1,6 @@
 import { render } from "preact";
 import { Studios } from "./components/Studios";
+import { Comments } from "./components/Comments";
 import "./index.css";
 
 export function App() {
@@ -16,11 +17,13 @@ export function App() {
           </a>
         </nav>
       </header>
-      <div class="flex gap-2">
+      <div class="flex gap-8">
         <div class="w-48">
           <Studios />
         </div>
-        <div class="flex-grow bg-red-500/20">(placeholder for comments)</div>
+        <div class="flex-grow">
+          <Comments />
+        </div>
       </div>
     </div>
   );
