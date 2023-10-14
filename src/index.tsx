@@ -18,7 +18,7 @@ export function App() {
         </nav>
       </header>
       <div class="flex gap-8">
-        <div class="w-48">
+        <div class="min-w-[theme(spacing.48)]">
           <Studios />
         </div>
         <div class="flex-grow">
