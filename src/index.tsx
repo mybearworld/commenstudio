@@ -17,6 +17,13 @@ export function App() {
           >
             Github
           </a>
+          <span class="font-bold"> - </span>
+          <a
+            href="https://scratch.mit.edu/discuss/topic/717430"
+            class="font-bold text-sky-600 hover:underline"
+          >
+            Topic
+          </a>
         </nav>
       </header>
       <div class="flex max-w-full gap-8">
