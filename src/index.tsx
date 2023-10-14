@@ -9,10 +9,10 @@ export function App() {
   return (
     <>
       <header class="mb-2 flex items-center gap-2">
-        <h1 class="text-3xl font-bold">Communistudio</h1>
+        <h1 class="text-3xl font-bold">Commenstudio</h1>
         <nav>
           <a
-            href="https://github.com/mybearworld/communistudio"
+            href="https://github.com/mybearworld/commenstudio"
             class="font-bold text-sky-600 hover:underline"
           >
             Github
