@@ -12,25 +12,14 @@ export function Studios() {
     setStudios(newStudios);
   };
 
-  const handleStudioDelete = (index: number) => {
-    setStudios([...studios.slice(0, index), ...studios.slice(index + 1)]);
-  };
-
   return (
     <div class="flex flex-col items-end gap-2">
       <h2 class="text-xl font-bold">Studios: {studios.length}</h2>
       {studios.length > 0 ? (
         <ul class="contents">
           {studios.map((studio, index) => (
-            <li class="flex w-full justify-between gap-2" key={index}>
+            <li class="flex w-full" key={index}>
               <StudioInput studio={studio} index={index} />
-              <button
-                onClick={(e) => handleStudioDelete(index)}
-                type="button"
-                class="font-bold text-sky-600 hover:underline"
-              >
-                Delete
-              </button>
             </li>
           ))}
         </ul>
@@ -48,7 +37,7 @@ export function Studios() {
 
 function StudioInput({ studio, index }: { studio: number; index: number }) {
   const [studios, setStudios] = useAtom(studiosAtom);
-  const [invalid, setInvalid] = useState(true);
+  const [invalid, setInvalid] = useState(false);
   const element = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -83,15 +72,29 @@ function StudioInput({ studio, index }: { studio: number; index: number }) {
       setInvalid(false);
     }
   };
+
+  const handleStudioDelete = () => {
+    setStudios([...studios.slice(0, index), ...studios.slice(index + 1)]);
+  };
+
   return (
-    <input
-      class={`w-32 rounded-xl bg-stone-300 px-2 py-1 ${
-        invalid ? "ring ring-red-400 focus-visible:outline-red-700" : ""
-      }`}
-      type="number"
-      value={studio}
-      onChange={(e) => handleInput()}
-      ref={element}
-    />
+    <div class="flex w-full items-center justify-between gap-2">
+      <input
+        class={`w-32 rounded-xl bg-stone-300 px-2 py-1 ${
+          invalid ? "ring ring-red-400 focus-visible:outline-red-700" : ""
+        }`}
+        type="number"
+        value={studio}
+        onChange={(e) => handleInput()}
+        ref={element}
+      />
+      <button
+        onClick={(e) => handleStudioDelete()}
+        type="button"
+        class="font-bold text-sky-600 hover:underline"
+      >
+        Delete
+      </button>
+    </div>
   );
 }
