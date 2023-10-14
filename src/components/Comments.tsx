@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { studiosAtom } from "../lib/atoms";
+import { studiosAtom, readToAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
 import { formatRelative } from "../lib/formatRelative";
@@ -78,6 +78,7 @@ function Comment({
   reply_count,
   studio,
 }: CommentRepresentation) {
+  const [readTo, setReadTo] = useAtom(readToAtom);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const emojiContent = content
     .replace(/<img src="\/images\/emoji\/meow.png"/g, `<img src="${meow}"`)
@@ -89,6 +90,12 @@ function Comment({
     )
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
   const createdDate = new Date(datetime_created);
+  const isRead = createdDate.getTime() <= readTo;
+
+  const handleMarkAsRead = () => {
+    setReadTo(createdDate.getTime());
+  };
+
   return (
     <div class="flex items-center gap-2 rounded-xl bg-stone-300 px-2 py-1">
       <a href={userLink}>
@@ -116,7 +123,18 @@ function Comment({
         -{" "}
         <span title={createdDate.toISOString()}>
           {formatRelative(createdDate)}
-        </span>
+        </span>{" "}
+        -{" "}
+        {isRead ? (
+          "Read"
+        ) : (
+          <button
+            class="font-bold text-sky-600 hover:underline"
+            onClick={handleMarkAsRead}
+          >
+            Mark as read
+          </button>
+        )}
       </div>
     </div>
   );
