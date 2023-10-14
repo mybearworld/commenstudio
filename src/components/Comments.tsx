@@ -1,28 +1,11 @@
 import { useEffect, useState } from "preact/hooks";
 import { studiosAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
-import { z } from "zod";
+import { getComments, CommentRepresentation } from "../lib/getComments";
 import { formatRelative } from "../lib/formatRelative";
 import gobo from "../emoji/gobo.png";
 import meow from "../emoji/meow.png";
 import waffle from "../emoji/waffle.png";
-
-const commentResponseSchema = z.object({
-  id: z.number(),
-  content: z.string(),
-  datetime_created: z.string().datetime(),
-  author: z.object({
-    id: z.number(),
-    username: z.string(),
-    scratchteam: z.boolean(),
-    image: z.string().url(),
-  }),
-  reply_count: z.number(),
-});
-
-type CommentRepresentation = z.infer<typeof commentResponseSchema> & {
-  studio: number;
-};
 
 export function Comments() {
   const [studios] = useAtom(studiosAtom);
@@ -30,30 +13,9 @@ export function Comments() {
 
   useEffect(() => {
     (async () => {
-      const studioComments = await Promise.all(
-        studios.map(async (studio) => {
-          const comments = await (
-            await fetch(
-              `https://corsproxy.io?https://api.scratch.mit.edu/studios/${studio}/comments`,
-            )
-          ).json();
-          return commentResponseSchema
-            .array()
-            .parse(comments)
-            .map((comment) => ({ ...comment, studio }));
-        }),
-      );
-      console.log({ studioComments });
-      let allComments: CommentRepresentation[] = [];
-      allComments = allComments.concat(...studioComments);
-      console.log({ allComments });
-      setComments(allComments);
+      setComments(await getComments(studios));
     })();
   }, [studios]);
-
-  useEffect(() => {
-    console.log(comments);
-  }, [comments]);
 
   return (
     <div class="space-y-2">

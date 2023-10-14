@@ -5,7 +5,7 @@ import "./index.css";
 
 export function App() {
   return (
-    <div>
+    <>
       <header class="mb-2 flex items-center gap-2">
         <h1 class="text-3xl font-bold">Communistudio</h1>
         <nav>
@@ -25,7 +25,7 @@ export function App() {
           <Comments />
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
