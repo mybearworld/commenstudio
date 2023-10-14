@@ -99,7 +99,11 @@ function Comment({
   };
 
   return (
-    <div class="flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1">
+    <div
+      class={`flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1 ${
+        isRead ? "opacity-80" : ""
+      }`}
+    >
       <a href={userLink}>
         <img
           class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)]"
