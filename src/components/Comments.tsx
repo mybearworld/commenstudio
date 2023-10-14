@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { studiosAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { z } from "zod";
+import { formatRelative } from "../lib/formatRelative";
 import gobo from "../emoji/gobo.png";
 import meow from "../emoji/meow.png";
 import waffle from "../emoji/waffle.png";
@@ -82,6 +83,7 @@ function Comment({
       '<img src="https://scratch.mit.edu/images/emoji',
     )
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
+  const createdDate = new Date(datetime_created);
   return (
     <div class="flex items-center gap-2 rounded-xl bg-stone-300 px-2 py-1">
       <a href={userLink}>
@@ -106,7 +108,10 @@ function Comment({
         >
           reply ({reply_count}/25)
         </a>{" "}
-        - {datetime_created}
+        -{" "}
+        <span title={createdDate.toISOString()}>
+          {formatRelative(createdDate)}
+        </span>
       </div>
     </div>
   );
