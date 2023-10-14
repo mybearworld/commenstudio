@@ -10,19 +10,62 @@ import waffle from "../emoji/waffle.png";
 export function Comments() {
   const [studios] = useAtom(studiosAtom);
   const [comments, setComments] = useState<CommentRepresentation[]>([]);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     (async () => {
-      setComments(await getComments(studios));
+      setComments(await getComments(studios, page));
     })();
-  }, [studios]);
+  }, [studios, page]);
+
+  const handlePreviousPage = () => {
+    setPage((p) => p - 1);
+  };
+
+  const handleNextPage = () => {
+    setPage((p) => p + 1);
+  };
 
   return (
     <div class="space-y-2">
-      <h2 class="text-xl font-bold">Comments</h2>
-      {comments.map((comment, index) => (
-        <Comment key={index} {...comment}></Comment>
-      ))}
+      <h2 class="text-xl font-bold">
+        Comments (
+        {page === 0 ? (
+          <>&laquo;</>
+        ) : (
+          <button
+            class="font-bold text-sky-600 hover:underline"
+            onClick={handlePreviousPage}
+          >
+            &laquo;
+          </button>
+        )}{" "}
+        {page + 1}{" "}
+        {comments.length === 0 ? (
+          <>&raquo;</>
+        ) : (
+          <button
+            class="font-bold text-sky-600 hover:underline"
+            onClick={handleNextPage}
+          >
+            &raquo;
+          </button>
+        )}
+        )
+      </h2>
+      {comments.length === 0 ? (
+        <p class="w-full text-lg italic">
+          {studios.length === 0
+            ? "Add some studios on the left!"
+            : page === 0
+            ? "There are no comments here."
+            : "No comments left."}
+        </p>
+      ) : (
+        comments.map((comment, index) => (
+          <Comment key={index} {...comment}></Comment>
+        ))
+      )}
     </div>
   );
 }
