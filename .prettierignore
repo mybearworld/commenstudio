@@ -1,0 +1,6 @@
+.gitignore
+.prettierignore
+pnpm-lock.yaml
+node_modules
+*.woff2
+*.txt

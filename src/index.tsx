@@ -4,9 +4,9 @@ import "./index.css";
 export function App() {
   return (
     <div>
-      <header class="flex gap-2 items-center">
-        <h1 class="font-bold text-3xl">Communistudio</h1>
-        <nav class="text-sky-600 font-bold">
+      <header class="flex items-center gap-2">
+        <h1 class="text-3xl font-bold">Communistudio</h1>
+        <nav class="font-bold text-sky-600">
           <a
             href="https://github.com/mybearworld/communistudio"
             class="hover:underline"
