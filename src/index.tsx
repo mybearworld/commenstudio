@@ -2,9 +2,9 @@ import { render } from "preact";
 import { useAtom } from "jotai";
 import { Studios } from "./components/Studios";
 import { Comments } from "./components/Comments";
-import { notificationsAtom, readToAtom } from "./lib/atoms";
+import { notificationsAtom, readToAtom, hideReadAtom } from "./lib/atoms";
 import "./index.css";
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 
 export function App() {
   return (
@@ -33,6 +33,7 @@ export function App() {
           <div class="mt-4 flex flex-col items-start">
             <ResetReadDate />
             <Notifications />
+            <HideRead />
           </div>
         </div>
         <div class="flex-1">
@@ -96,6 +97,31 @@ function Notifications() {
         </button>
       )}
     </>
+  );
+}
+
+function HideRead() {
+  const [hideRead, setHideRead] = useAtom(hideReadAtom);
+  const checkbox = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    if (!checkbox.current) {
+      return;
+    }
+    setHideRead(checkbox.current.checked);
+  };
+
+  return (
+    <label>
+      Hide read comments:
+      <input
+        type="checkbox"
+        class="ml-2"
+        onClick={handleClick}
+        checked={hideRead}
+        ref={checkbox}
+      />
+    </label>
   );
 }
 

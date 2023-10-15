@@ -16,3 +16,4 @@ export const pinReasonsAtom = atomWithStorage<{ [k: string]: string }>(
   "commenstudio:pinReasons",
   {},
 );
+export const hideReadAtom = atomWithStorage("commenstudio:hideRead", false);

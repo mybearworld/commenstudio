@@ -5,6 +5,7 @@ import {
   readToAtom,
   pinnedCommentsAtom,
   pinReasonsAtom,
+  hideReadAtom,
 } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
@@ -162,6 +163,7 @@ function Comment({
   studioName,
   showIfPinned = true,
 }: CommentRepresentation & { studioName: string; showIfPinned?: boolean }) {
+  const [hideRead] = useAtom(hideReadAtom);
   const [readTo, setReadTo] = useAtom(readToAtom);
   const [pinReasons, setPinReasons] = useAtom(pinReasonsAtom);
   const [pinnedComments, setPinnedComments] = useAtom(pinnedCommentsAtom);
@@ -181,7 +183,7 @@ function Comment({
   const pinEntry = pinnedComments.find((comment) => comment.id === id);
   const isPinned = !!pinEntry;
 
-  if (isPinned && !showIfPinned) {
+  if ((isPinned && !showIfPinned) || (isRead && hideRead)) {
     return null;
   }
 
