@@ -196,6 +196,10 @@ function Comment({
     setReadTo(createdDate.getTime());
   };
 
+  const handleMarkAsUnRead = () => {
+    setReadTo(createdDate.getTime());
+  };
+  
   const handleTogglePin = () => {
     if (isPinned) {
       const index = pinnedComments.indexOf(pinEntry);
@@ -274,7 +278,13 @@ function Comment({
         </span>{" "}
         -{" "}
         {isRead ? (
-          "Read"
+          <button
+            class="font-bold text-sky-600 hover:underline"
+            type="button"
+            onClick={handleMarkAsRead}
+          >
+            Mark as unread
+          </button>
         ) : (
           <button
             class="font-bold text-sky-600 hover:underline"
