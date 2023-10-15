@@ -18,7 +18,6 @@ export const formatRelative = (date: Date) => {
   const days = hours / HOURS_PER_DAY;
 
   if (Math.abs(seconds) < SECONDS_PER_MINUTE) {
-    console.log({ date, now, seconds });
     return formatter.format(Math.trunc(seconds), "seconds");
   }
 
