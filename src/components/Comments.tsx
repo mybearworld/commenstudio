@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { studiosAtom, readToAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
-import { getStudioName } from "../lib/getStudioName";
+import { getStudioNames } from "../lib/getStudioNames";
 import { formatRelative } from "../lib/formatRelative";
 import gobo from "../emoji/gobo.png";
 import meow from "../emoji/meow.png";
@@ -12,10 +12,14 @@ export function Comments() {
   const [studios] = useAtom(studiosAtom);
   const [comments, setComments] = useState<CommentRepresentation[]>([]);
   const [page, setPage] = useState(0);
+  const [studioNames, setStudioNames] = useState<Map<number, string>>(
+    new Map(),
+  );
 
   useEffect(() => {
     (async () => {
       setComments(await getComments(studios, page));
+      setStudioNames(await getStudioNames(new Set(studios)));
     })();
   }, [studios, page]);
 
@@ -66,7 +70,11 @@ export function Comments() {
         </p>
       ) : (
         comments.map((comment, index) => (
-          <Comment key={index} {...comment}></Comment>
+          <Comment
+            key={index}
+            {...comment}
+            studioName={studioNames.get(comment.studio) ?? ""}
+          ></Comment>
         ))
       )}
     </div>
@@ -80,7 +88,8 @@ function Comment({
   author,
   reply_count,
   studio,
-}: CommentRepresentation) {
+  studioName,
+}: CommentRepresentation & { studioName: string }) {
   const [readTo, setReadTo] = useAtom(readToAtom);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const emojiContent = content
@@ -94,13 +103,6 @@ function Comment({
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
   const createdDate = new Date(datetime_created);
   const isRead = createdDate.getTime() <= readTo;
-  const [studioName, setStudioName] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      setStudioName(await getStudioName(studio));
-    })();
-  }, []);
 
   const handleMarkAsRead = () => {
     setReadTo(createdDate.getTime());
