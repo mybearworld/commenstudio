@@ -330,7 +330,8 @@ function Comment({
             -{" "}
             <a
               class="font-bold text-sky-600 hover:underline dark:text-sky-500"
-              href={`https://scratch.mit.edu/studios/${studio}/comments#comment-${id}`}
+              href={`https://scratch.mit.edu/studios/${studio}/comments#comments-${id}`}
+              target="_blank"
             >
               View on Scratch
             </a>
