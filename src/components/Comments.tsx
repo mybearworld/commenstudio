@@ -9,7 +9,11 @@ import {
   pinReasonsAtom,
   hideReadAtom,
 } from "../lib/atoms";
-import { getComments, CommentRepresentation } from "../lib/getComments";
+import {
+  getComments,
+  getReplies,
+  CommentRepresentation,
+} from "../lib/getComments";
 import { emojiTextToEmoji } from "../lib/emojiTextToEmoji";
 import { getStudioNames } from "../lib/getStudioNames";
 import { formatRelative } from "../lib/formatRelative";
@@ -163,11 +167,17 @@ function Comment({
   studio,
   studioName,
   showIfPinned = true,
-}: CommentRepresentation & { studioName: string; showIfPinned?: boolean }) {
+  reply = false,
+}: CommentRepresentation & {
+  studioName: string;
+  showIfPinned?: boolean;
+  reply?: boolean;
+}) {
   const [hideRead] = useAtom(hideReadAtom);
   const [readTo, setReadTo] = useAtom(readToAtom);
   const [pinReasons, setPinReasons] = useAtom(pinReasonsAtom);
   const [pinnedComments, setPinnedComments] = useAtom(pinnedCommentsAtom);
+  const [showReplies, setShowReplies] = useState(false);
   const pinReasonInput = useRef<HTMLInputElement>(null);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const linkifiedContent = linkifyHtml(content, {
@@ -191,6 +201,10 @@ function Comment({
   if ((isPinned && !showIfPinned) || (isRead && hideRead)) {
     return null;
   }
+
+  const handleShowReplies = () => {
+    setShowReplies(!showReplies);
+  };
 
   const handleMarkAsRead = () => {
     setReadTo(createdDate.getTime());
@@ -231,79 +245,129 @@ function Comment({
 
   return (
     <div
-      class={`flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1 dark:bg-stone-700 ${
-        isRead && !isPinned ? "opacity-80" : ""
-      }`}
+      class={` w-full rounded-xl px-2 py-1 ${
+        reply
+          ? "bg-stone-200 dark:bg-stone-800"
+          : "bg-stone-300 dark:bg-stone-700"
+      } ${isRead && !isPinned ? "opacity-80" : ""}`}
     >
-      <a href={userLink}>
-        <img
-          class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)]"
-          src={author.image}
-          alt={`${author.username}'s profile picture`}
-        />
-      </a>
-      <div>
-        <span class="flex items-center gap-2">
-          {isPinned ? (
-            <img
-              class="inline-block h-4 w-4"
-              src={pin}
-              title="Pinned"
-              alt="Pin emoji"
-            ></img>
-          ) : null}
-          <a
-            href={userLink}
-            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
-          >
-            {author.username}
-          </a>
-          <span class="italic">{studioName}</span>
-        </span>
-        <p
-          dangerouslySetInnerHTML={{ __html: emojiContent }}
-          style={{ overflowWrap: "anywhere" }}
-        ></p>
-        <a
-          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
-          target="_blank"
-          href={`https://scratch.mit.edu/studios/${studio}/comments/#comments-${id}`}
-        >
-          reply ({reply_count}/25)
-        </a>{" "}
-        -{" "}
-        <span title={createdDate.toISOString()}>
-          {formatRelative(createdDate)}
-        </span>{" "}
-        -{" "}
-        {isRead ? (
-          "Read"
-        ) : (
-          <button
-            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
-            type="button"
-            onClick={handleMarkAsRead}
-          >
-            Mark as read
-          </button>
-        )}{" "}
-        -{" "}
-        <button
-          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
-          onClick={handleTogglePin}
-        >
-          {isPinned ? "Unpin" : "Pin"}
-        </button>
-        {isPinned ? (
-          <input
-            class="ml-2 rounded-xl bg-stone-200 px-2 py-1 dark:bg-stone-800"
-            placeholder="Pin reason"
-            onChange={handlePinReason}
-            value={pinReasons[id] ?? ""}
-            ref={pinReasonInput}
+      <div class="flex items-center gap-2">
+        <a href={userLink}>
+          <img
+            class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)]"
+            src={author.image}
+            alt={`${author.username}'s profile picture`}
           />
-        ) : null}
+        </a>
+        <div class="w-full">
+          <span class="flex items-center gap-2">
+            {isPinned ? (
+              <img
+                class="inline-block h-4 w-4"
+                src={pin}
+                title="Pinned"
+                alt="Pin emoji"
+              ></img>
+            ) : null}
+            <a
+              href={userLink}
+              class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+            >
+              {author.username}
+            </a>
+            {reply ? null : <span class="italic">{studioName}</span>}
+          </span>
+          <p
+            dangerouslySetInnerHTML={{ __html: emojiContent }}
+            style={{ overflowWrap: "anywhere" }}
+          ></p>
+          {reply ? null : (
+            <>
+              {reply_count === 0 ? (
+                "No replies"
+              ) : (
+                <button
+                  class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+                  onClick={handleShowReplies}
+                >
+                  {showReplies ? "Hide" : "Show"} replies ({reply_count}/25)
+                </button>
+              )}{" "}
+              -{" "}
+              {isRead ? (
+                "Read"
+              ) : (
+                <button
+                  class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+                  type="button"
+                  onClick={handleMarkAsRead}
+                >
+                  Mark as read
+                </button>
+              )}{" "}
+              -{" "}
+              <button
+                class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+                onClick={handleTogglePin}
+              >
+                {isPinned ? "Unpin" : "Pin"}
+              </button>
+              {isPinned ? (
+                <input
+                  class="ml-2 rounded-xl bg-stone-200 px-2 py-1 dark:bg-stone-800"
+                  placeholder="Pin reason"
+                  onChange={handlePinReason}
+                  value={pinReasons[id] ?? ""}
+                  ref={pinReasonInput}
+                />
+              ) : null}
+            </>
+          )}
+          <span class="float-right">
+            <span title={createdDate.toISOString()}>
+              {formatRelative(createdDate)}
+            </span>{" "}
+            -{" "}
+            <a
+              class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+              href={`https://scratch.mit.edu/studios/${studio}/comments#comment-${id}`}
+            >
+              View on Scratch
+            </a>
+          </span>
+        </div>
       </div>
+      {showReplies ? (
+        <div class="ml-4 mt-2 space-y-1">
+          <CommentReplies {...{ id, studio, studioName }} />
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+function CommentReplies({
+  id,
+  studio,
+  studioName,
+}: {
+  id: number;
+  studio: number;
+  studioName: string;
+}) {
+  const [replies, setReplies] = useState<CommentRepresentation[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      setReplies(await getReplies(studio, id));
+    })();
+  }, []);
+
+  return (
+    <>
+      {replies.map((reply) => (
+        <Comment {...reply} studioName={studioName} reply />
+      ))}
+    </>
   );
 }

@@ -49,3 +49,16 @@ export const getComments = async (studios: number[], page: number = 0) => {
   });
   return allComments;
 };
+
+export const getReplies = async (studio: number, comment: number) => {
+  const response = await (
+    await proxy(
+      `https://api.scratch.mit.edu/studios/${studio}/comments/${comment}/replies`,
+    )
+  ).json();
+  const parsedResponse = commentResponseSchema.array().parse(response);
+  return parsedResponse.map((response) => ({
+    ...response,
+    studio,
+  })) satisfies CommentRepresentation[];
+};
