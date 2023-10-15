@@ -24,6 +24,10 @@ import waffle from "../emoji/waffle.png";
 
 const MILLISECONDS_PER_SECOND = 1000;
 const SECONDS_PER_MINUTE = 60;
+const dateFormatter = Intl.DateTimeFormat("en", {
+  dateStyle: "short",
+  timeStyle: "short",
+});
 
 export function Comments() {
   const [studios] = useAtom(studiosAtom);
@@ -35,6 +39,7 @@ export function Comments() {
     new Map(),
   );
   const [currentInterval, setCurrentInterval] = useState<number | null>(null);
+  const [latestUpdate, setLatestUpdate] = useState(new Date());
   const notificationsTextElement = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -44,6 +49,7 @@ export function Comments() {
     setCurrentInterval(
       setInterval(
         async () => {
+          setLatestUpdate(new Date());
           if (page !== 0 || !notifications) {
             return;
           }
@@ -126,7 +132,10 @@ export function Comments() {
             &raquo;
           </button>
         )}
-        )
+        ){" "}
+        <span class="text-base font-normal italic">
+          (Latest update: {dateFormatter.format(latestUpdate)})
+        </span>
       </h2>
       {pinnedComments.length === 0 ? null : (
         <div class="mb-4 space-y-2">
