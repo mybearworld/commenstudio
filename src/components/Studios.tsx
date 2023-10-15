@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { studiosAtom, studioColorsAtom } from "../lib/atoms";
+import { studiosAtom } from "../lib/atoms";
 import { studioExists } from "../lib/studioExists";
 import { useEffect, useRef, useState } from "preact/hooks";
 
@@ -37,10 +37,8 @@ export function Studios() {
 
 function StudioInput({ studio, index }: { studio: number; index: number }) {
   const [studios, setStudios] = useAtom(studiosAtom);
-  const [studioColors, setStudioColors] = useAtom(studioColorsAtom);
   const [invalid, setInvalid] = useState(false);
   const element = useRef<HTMLInputElement>(null);
-  const colorPicker = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -79,23 +77,6 @@ function StudioInput({ studio, index }: { studio: number; index: number }) {
     setStudios([...studios.slice(0, index), ...studios.slice(index + 1)]);
   };
 
-  const handleColorChange = () => {
-    if (!colorPicker.current) {
-      return;
-    }
-    const color = colorPicker.current.value;
-    setStudioColors({
-      ...studioColors,
-      [studios[index]]: { color },
-    });
-  };
-
-  const handleRemoveColor = () => {
-    const newStudioColors = { ...studioColors };
-    delete newStudioColors[studios[index]];
-    setStudioColors(newStudioColors);
-  };
-
   return (
     <div class="w-full">
       <div class="flex w-full justify-between">
@@ -115,33 +96,6 @@ function StudioInput({ studio, index }: { studio: number; index: number }) {
         >
           Delete
         </button>
-      </div>
-      <div class="flex w-full justify-between">
-        <div class="flex items-center gap-1">
-          <span>Color:</span>
-          <input
-            type="color"
-            class="w-5 cursor-pointer bg-transparent p-0"
-            onChange={handleColorChange}
-            value={
-              studios[index] in studioColors
-                ? studioColors[studios[index]].color
-                : "#333333"
-            }
-            ref={colorPicker}
-          />
-        </div>
-        {studios[index] in studioColors ? (
-          <button
-            class="font-bold text-sky-600 hover:underline"
-            type="button"
-            onClick={handleRemoveColor}
-          >
-            Remove color
-          </button>
-        ) : (
-          "No color set"
-        )}
       </div>
     </div>
   );

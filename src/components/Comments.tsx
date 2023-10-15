@@ -1,7 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
-import { studiosAtom, studioColorsAtom, readToAtom } from "../lib/atoms";
+import { studiosAtom, readToAtom } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
+import { getStudioName } from "../lib/getStudioName";
 import { formatRelative } from "../lib/formatRelative";
 import gobo from "../emoji/gobo.png";
 import meow from "../emoji/meow.png";
@@ -80,7 +81,6 @@ function Comment({
   reply_count,
   studio,
 }: CommentRepresentation) {
-  const [studioColors] = useAtom(studioColorsAtom);
   const [readTo, setReadTo] = useAtom(readToAtom);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const emojiContent = content
@@ -94,6 +94,13 @@ function Comment({
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
   const createdDate = new Date(datetime_created);
   const isRead = createdDate.getTime() <= readTo;
+  const [studioName, setStudioName] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      setStudioName(await getStudioName(studio));
+    })();
+  }, []);
 
   const handleMarkAsRead = () => {
     setReadTo(createdDate.getTime());
@@ -116,12 +123,7 @@ function Comment({
         <a href={userLink} class="font-bold text-sky-600 hover:underline">
           {author.username}
         </a>
-        {studio in studioColors ? (
-          <span
-            class="ml-2 inline-block h-3 w-3 rounded-full border-[1px] border-black"
-            style={{ backgroundColor: studioColors[studio].color }}
-          ></span>
-        ) : null}
+        <span class="ml-2 italic">{studioName}</span>
         <p
           dangerouslySetInnerHTML={{ __html: emojiContent }}
           style={{ overflowWrap: "anywhere" }}
