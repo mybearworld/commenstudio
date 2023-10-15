@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { proxy } from "./proxy";
 
 const storedStudios = new Map<number, string>();
 
@@ -12,9 +13,7 @@ export const getStudioName = async (studio: number) => {
     return storedName;
   }
   const response = await (
-    await fetch(
-      `https://api.codetabs.com/v1/proxy?quest=https://api.scratch.mit.edu/studios/${studio}`,
-    )
+    await proxy(`https://api.scratch.mit.edu/studios/${studio}`)
   ).json();
   const parsedResponse = studioNameSchema.parse(response);
   storedStudios.set(studio, parsedResponse.title);

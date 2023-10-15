@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+import { proxy } from "./proxy";
 
 const commentResponseSchema = z.object({
   id: z.number(),
@@ -22,20 +22,17 @@ export const getComments = async (studios: number[], page: number = 0) => {
   const studioComments = await Promise.all(
     [...new Set(studios)].map(async (studio) => {
       const comments = await (
-        await fetch(
-          `https://api.codetabs.com/v1/proxy?quest=https://api.scratch.mit.edu/studios/${studio}/comments?limit=40&offset=${
+        await proxy(
+          `https://api.scratch.mit.edu/studios/${studio}/comments?limit=40&offset=${
             40 * page
           }`,
         )
       ).json();
-      const parsedComments = commentResponseSchema
-      .array()
-      .safeParse(comments);
+      const parsedComments = commentResponseSchema.array().safeParse(comments);
       if (!parsedComments.success) {
         return [];
       }
-      return parsedComments.data
-        .map((comment) => ({ ...comment, studio }));
+      return parsedComments.data.map((comment) => ({ ...comment, studio }));
     }),
   );
   let allComments: CommentRepresentation[] = [];
