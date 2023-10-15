@@ -62,6 +62,14 @@ export function Comments() {
         )}
         )
       </h2>
+      {pinnedComments.length === 0 ? null : (
+        <div class="mb-4 space-y-2">
+          {" "}
+          {pinnedComments.map((comment, index) => (
+            <Comment key={index} {...comment} />
+          ))}
+        </div>
+      )}
       {comments.length === 0 ? (
         <p class="w-full text-lg italic">
           {studios.length === 0
@@ -71,24 +79,14 @@ export function Comments() {
             : "No comments left."}
         </p>
       ) : (
-        <>
-          {pinnedComments.length === 0 ? null : (
-            <div class="mb-4 space-y-2">
-              {" "}
-              {pinnedComments.map((comment, index) => (
-                <Comment key={index} {...comment} />
-              ))}
-            </div>
-          )}
-          {comments.map((comment, index) => (
-            <Comment
-              key={index}
-              {...comment}
-              studioName={studioNames.get(comment.studio) ?? ""}
-              showIfPinned={false}
-            ></Comment>
-          ))}
-        </>
+        comments.map((comment, index) => (
+          <Comment
+            key={index}
+            {...comment}
+            studioName={studioNames.get(comment.studio) ?? ""}
+            showIfPinned={false}
+          ></Comment>
+        ))
       )}
     </div>
   );
