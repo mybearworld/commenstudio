@@ -296,7 +296,7 @@ function Comment({
         </button>
         {isPinned ? (
           <input
-            class="ml-2 rounded-xl bg-stone-200 px-2 py-1"
+            class="ml-2 rounded-xl bg-stone-200 px-2 py-1 dark:bg-stone-800"
             placeholder="Pin reason"
             onChange={handlePinReason}
             value={pinReasons[id] ?? ""}
