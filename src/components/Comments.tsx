@@ -134,7 +134,7 @@ export function Comments() {
       {comments.length === 0 ? (
         <p class="w-full text-lg italic">
           {studios.length === 0
-            ? "Add some studios on the left!"
+            ? "Add some studio IDs on the left! The comments from them will appear over here."
             : page === 0
             ? "There are no comments here."
             : "No comments left."}
