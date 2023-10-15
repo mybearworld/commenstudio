@@ -254,7 +254,7 @@ function Comment({
       <div class="flex items-center gap-2">
         <a href={userLink}>
           <img
-            class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)]"
+            class="h-12 min-h-[theme(spacing.12)] w-12 min-w-[theme(spacing.12)] rounded-lg"
             src={author.image}
             alt={`${author.username}'s profile picture`}
           />
