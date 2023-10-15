@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { useAtom } from "jotai";
 import {
   notificationsAtom,
   studiosAtom,
@@ -7,7 +8,6 @@ import {
   pinReasonsAtom,
   hideReadAtom,
 } from "../lib/atoms";
-import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
 import { emojiTextToEmoji } from "../lib/emojiTextToEmoji";
 import { getStudioNames } from "../lib/getStudioNames";

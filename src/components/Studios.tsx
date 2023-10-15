@@ -1,7 +1,7 @@
+import { useEffect, useRef, useState } from "preact/hooks";
 import { useAtom } from "jotai";
 import { studiosAtom } from "../lib/atoms";
 import { studioExists } from "../lib/studioExists";
-import { useEffect, useRef, useState } from "preact/hooks";
 
 export function Studios() {
   const [studios, setStudios] = useAtom(studiosAtom);

@@ -1,10 +1,10 @@
 import { render } from "preact";
+import { useEffect, useRef } from "preact/hooks";
 import { useAtom } from "jotai";
 import { Studios } from "./components/Studios";
 import { Comments } from "./components/Comments";
 import { notificationsAtom, readToAtom, hideReadAtom } from "./lib/atoms";
 import "./index.css";
-import { useEffect, useRef } from "preact/hooks";
 
 export function App() {
   return (
