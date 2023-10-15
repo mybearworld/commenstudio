@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import {
+  notificationsAtom,
   studiosAtom,
   readToAtom,
   pinnedCommentsAtom,
@@ -7,6 +8,7 @@ import {
 } from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
+import { emojiTextToEmoji } from "../lib/emojiTextToEmoji";
 import { getStudioNames } from "../lib/getStudioNames";
 import { formatRelative } from "../lib/formatRelative";
 import gobo from "../emoji/gobo.png";
@@ -14,14 +16,66 @@ import meow from "../emoji/meow.png";
 import pin from "../emoji/pin.svg";
 import waffle from "../emoji/waffle.png";
 
+const MILLISECONDS_PER_SECOND = 1000;
+const SECONDS_PER_MINUTE = 60;
+
 export function Comments() {
   const [studios] = useAtom(studiosAtom);
   const [pinnedComments] = useAtom(pinnedCommentsAtom);
+  const [notifications] = useAtom(notificationsAtom);
   const [comments, setComments] = useState<CommentRepresentation[]>([]);
   const [page, setPage] = useState(0);
   const [studioNames, setStudioNames] = useState<Map<number, string>>(
     new Map(),
   );
+  const [currentInterval, setCurrentInterval] = useState<number | null>(null);
+  const notificationsTextElement = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (currentInterval) {
+      clearInterval(currentInterval);
+    }
+    setCurrentInterval(
+      setInterval(
+        async () => {
+          if (page !== 0 || !notifications) {
+            return;
+          }
+          const newComments = await getComments(studios, page);
+          const isNew = newComments[0].id !== comments[0].id;
+          if (!isNew) {
+            return;
+          }
+          const oldCommentsStart =
+            newComments
+              .map((comment, index) => ({
+                ...comment,
+                index,
+              }))
+              .find((comment) => comments[0].id === comment.id)?.index ?? 0;
+          const addedComments = newComments.slice(0, oldCommentsStart);
+          console.log(newComments, comments, addedComments);
+          addedComments.forEach((comment) => {
+            if (!notificationsTextElement.current) {
+              return;
+            }
+            notificationsTextElement.current.innerHTML = emojiTextToEmoji(
+              comment.content,
+            );
+            new Notification(
+              `New comment from ${studioNames.get(comment.studio)}`,
+              {
+                body: `${comment.author.username}: "${notificationsTextElement.current.textContent}"`,
+                icon: comment.author.image,
+              },
+            );
+          });
+          setComments(newComments);
+        },
+        1.5 * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND,
+      ),
+    );
+  }, [studios, comments, page, notifications, studioNames]);
 
   useEffect(() => {
     (async () => {
@@ -40,6 +94,7 @@ export function Comments() {
 
   return (
     <div class="flex flex-col gap-2">
+      <span class="hidden" ref={notificationsTextElement}></span>
       <h2 class="text-xl font-bold">
         Comments (
         {page === 0 ? (

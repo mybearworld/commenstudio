@@ -1,5 +1,8 @@
+import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { CommentRepresentation } from "./getComments";
+
+export const notificationsAtom = atom(false);
 
 export const studiosAtom = atomWithStorage<number[]>(
   "commenstudio:studios",

@@ -2,8 +2,9 @@ import { render } from "preact";
 import { useAtom } from "jotai";
 import { Studios } from "./components/Studios";
 import { Comments } from "./components/Comments";
-import { readToAtom } from "./lib/atoms";
+import { notificationsAtom, readToAtom } from "./lib/atoms";
 import "./index.css";
+import { useEffect } from "preact/hooks";
 
 export function App() {
   return (
@@ -29,8 +30,9 @@ export function App() {
       <div class="flex max-w-full gap-8">
         <div class="min-w-[theme(spacing.48)]">
           <Studios />
-          <div class="mt-4">
+          <div class="mt-4 flex flex-col items-start">
             <ResetReadDate />
+            <Notifications />
           </div>
         </div>
         <div class="flex-1">
@@ -62,6 +64,38 @@ function ResetReadDate() {
     >
       Reset read date
     </button>
+  );
+}
+
+function Notifications() {
+  const [notifications, setNotifications] = useAtom(notificationsAtom);
+
+  useEffect(() => {
+    if (Notification.permission === "granted") {
+      setNotifications(true);
+    }
+  }, []);
+
+  const handleClick = async () => {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      console.log("cool");
+      setNotifications(true);
+    }
+  };
+
+  return (
+    <>
+      {notifications ? null : (
+        <button
+          class="font-bold text-sky-600 hover:underline"
+          type="button"
+          onClick={handleClick}
+        >
+          Enable notifications
+        </button>
+      )}
+    </>
   );
 }
 
