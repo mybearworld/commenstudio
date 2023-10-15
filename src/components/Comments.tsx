@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { useAtom } from "jotai";
+import linkifyHtml from "linkify-html";
 import {
   notificationsAtom,
   studiosAtom,
@@ -178,6 +179,10 @@ function Comment({
       '<img src="https://scratch.mit.edu/images/emoji',
     )
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
+  const finalContent = linkifyHtml(emojiContent, {
+    className: "font-bold text-sky-600 hover:underline",
+    defaultProtocol: "https",
+  });
   const createdDate = new Date(datetime_created);
   const isRead = createdDate.getTime() <= readTo;
   const pinEntry = pinnedComments.find((comment) => comment.id === id);
@@ -253,7 +258,7 @@ function Comment({
           <span class="italic">{studioName}</span>
         </span>
         <p
-          dangerouslySetInnerHTML={{ __html: emojiContent }}
+          dangerouslySetInnerHTML={{ __html: finalContent }}
           style={{ overflowWrap: "anywhere" }}
         ></p>
         <a
