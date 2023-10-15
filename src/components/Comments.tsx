@@ -1,5 +1,10 @@
-import { useEffect, useState } from "preact/hooks";
-import { studiosAtom, readToAtom, pinnedCommentsAtom } from "../lib/atoms";
+import { useEffect, useRef, useState } from "preact/hooks";
+import {
+  studiosAtom,
+  readToAtom,
+  pinnedCommentsAtom,
+  pinReasonsAtom,
+} from "../lib/atoms";
 import { useAtom } from "jotai";
 import { getComments, CommentRepresentation } from "../lib/getComments";
 import { getStudioNames } from "../lib/getStudioNames";
@@ -103,7 +108,9 @@ function Comment({
   showIfPinned = true,
 }: CommentRepresentation & { studioName: string; showIfPinned?: boolean }) {
   const [readTo, setReadTo] = useAtom(readToAtom);
+  const [pinReasons, setPinReasons] = useAtom(pinReasonsAtom);
   const [pinnedComments, setPinnedComments] = useAtom(pinnedCommentsAtom);
+  const pinReasonInput = useRef<HTMLInputElement>(null);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const emojiContent = content
     .replace(/<img src="\/images\/emoji\/meow.png"/g, `<img src="${meow}"`)
@@ -147,6 +154,17 @@ function Comment({
       });
       setPinnedComments(newPinnedComments);
     }
+  };
+
+  const handlePinReason = () => {
+    if (!pinReasonInput.current) {
+      return;
+    }
+    const pinReason = pinReasonInput.current.value;
+    const newPinReasons = { ...pinReasons };
+    newPinReasons[id.toString()] = pinReason;
+    console.log(newPinReasons);
+    setPinReasons(newPinReasons);
   };
 
   return (
@@ -211,6 +229,15 @@ function Comment({
         >
           {isPinned ? "Unpin" : "Pin"}
         </button>
+        {isPinned ? (
+          <input
+            class="ml-2 rounded-xl bg-stone-200 px-2 py-1"
+            placeholder="Pin reason"
+            onChange={handlePinReason}
+            value={pinReasons[id] ?? ""}
+            ref={pinReasonInput}
+          />
+        ) : null}
       </div>
     </div>
   );

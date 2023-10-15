@@ -9,3 +9,7 @@ export const readToAtom = atomWithStorage("commenstudio:readTo", 0);
 export const pinnedCommentsAtom = atomWithStorage<
   (CommentRepresentation & { studioName: string })[]
 >("commenstudio:pinnedComments", []);
+export const pinReasonsAtom = atomWithStorage<{ [k: string]: string }>(
+  "commenstudio:pinReasons",
+  {},
+);
