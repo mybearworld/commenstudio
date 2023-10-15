@@ -179,6 +179,7 @@ function Comment({
   const [pinnedComments, setPinnedComments] = useAtom(pinnedCommentsAtom);
   const [showReplies, setShowReplies] = useState(false);
   const pinReasonInput = useRef<HTMLInputElement>(null);
+  const [currentInterval, setCurrentInterval] = useState<number | null>(null);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const linkifiedContent = linkifyHtml(content, {
     className: "font-bold text-sky-600 dark:text-sky-500 hover:underline",
@@ -194,6 +195,7 @@ function Comment({
     )
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
   const createdDate = new Date(datetime_created);
+  const [formattedDate, setFormttedDate] = useState(formatRelative(new Date()));
   const isRead = createdDate.getTime() <= readTo;
   const pinEntry = pinnedComments.find((comment) => comment.id === id);
   const isPinned = !!pinEntry;
@@ -201,6 +203,17 @@ function Comment({
   if ((isPinned && !showIfPinned) || (isRead && hideRead)) {
     return null;
   }
+
+  useEffect(() => {
+    const func = () => {
+      setFormttedDate(formatRelative(new Date()));
+    };
+    if (currentInterval) {
+      clearInterval(currentInterval);
+    }
+    setCurrentInterval(setInterval(func, MILLISECONDS_PER_SECOND));
+    func();
+  });
 
   const handleShowReplies = () => {
     setShowReplies(!showReplies);
