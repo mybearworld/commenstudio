@@ -25,7 +25,7 @@ export function Studios() {
         </ul>
       ) : null}
       <button
-        class="font-bold text-sky-600 hover:underline"
+        class="font-bold text-sky-600 hover:underline dark:text-sky-500"
         type="button"
         onClick={handleNewStudio}
       >
@@ -81,7 +81,7 @@ function StudioInput({ studio, index }: { studio: number; index: number }) {
     <div class="w-full">
       <div class="flex w-full justify-between">
         <input
-          class={`w-32 rounded-xl bg-stone-300 px-2 py-1 ${
+          class={`w-32 rounded-xl bg-stone-300 px-2 py-1 dark:bg-stone-700 ${
             invalid ? "ring ring-red-400 focus-visible:outline-red-700" : ""
           }`}
           type="number"
@@ -92,7 +92,7 @@ function StudioInput({ studio, index }: { studio: number; index: number }) {
         <button
           onClick={() => handleStudioDelete()}
           type="button"
-          class="font-bold text-sky-600 hover:underline"
+          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
         >
           Delete
         </button>

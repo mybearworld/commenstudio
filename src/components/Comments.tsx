@@ -103,7 +103,7 @@ export function Comments() {
           <>&laquo;</>
         ) : (
           <button
-            class="font-bold text-sky-600 hover:underline"
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
             type="button"
             onClick={handlePreviousPage}
           >
@@ -115,7 +115,7 @@ export function Comments() {
           <>&raquo;</>
         ) : (
           <button
-            class="font-bold text-sky-600 hover:underline"
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
             type="button"
             onClick={handleNextPage}
           >
@@ -171,7 +171,7 @@ function Comment({
   const pinReasonInput = useRef<HTMLInputElement>(null);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
   const linkifiedContent = linkifyHtml(content, {
-    className: "font-bold text-sky-600 hover:underline",
+    className: "font-bold text-sky-600 dark:text-sky-500 hover:underline",
     defaultProtocol: "https",
   }).replace(/&amp;/g, "&");
   const emojiContent = linkifiedContent
@@ -231,7 +231,7 @@ function Comment({
 
   return (
     <div
-      class={`flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1 ${
+      class={`flex w-full items-center gap-2 rounded-xl bg-stone-300 px-2 py-1 dark:bg-stone-700 ${
         isRead && !isPinned ? "opacity-80" : ""
       }`}
     >
@@ -252,7 +252,10 @@ function Comment({
               alt="Pin emoji"
             ></img>
           ) : null}
-          <a href={userLink} class="font-bold text-sky-600 hover:underline">
+          <a
+            href={userLink}
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+          >
             {author.username}
           </a>
           <span class="italic">{studioName}</span>
@@ -262,7 +265,7 @@ function Comment({
           style={{ overflowWrap: "anywhere" }}
         ></p>
         <a
-          class="font-bold text-sky-600 hover:underline"
+          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
           target="_blank"
           href={`https://scratch.mit.edu/studios/${studio}/comments/#comments-${id}`}
         >
@@ -277,7 +280,7 @@ function Comment({
           "Read"
         ) : (
           <button
-            class="font-bold text-sky-600 hover:underline"
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
             type="button"
             onClick={handleMarkAsRead}
           >
@@ -286,7 +289,7 @@ function Comment({
         )}{" "}
         -{" "}
         <button
-          class="font-bold text-sky-600 hover:underline"
+          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
           onClick={handleTogglePin}
         >
           {isPinned ? "Unpin" : "Pin"}

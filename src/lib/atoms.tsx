@@ -4,6 +4,10 @@ import { CommentRepresentation } from "./getComments";
 
 export const notificationsAtom = atom(false);
 
+export const darkModeAtom = atomWithStorage(
+  "commenstudio:darkMode",
+  matchMedia("(prefers-color-scheme: dark)").matches,
+);
 export const studiosAtom = atomWithStorage<number[]>(
   "commenstudio:studios",
   [],

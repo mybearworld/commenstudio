@@ -3,29 +3,34 @@ import { useEffect, useRef } from "preact/hooks";
 import { useAtom } from "jotai";
 import { Studios } from "./components/Studios";
 import { Comments } from "./components/Comments";
-import { notificationsAtom, readToAtom, hideReadAtom } from "./lib/atoms";
+import {
+  darkModeAtom,
+  notificationsAtom,
+  readToAtom,
+  hideReadAtom,
+} from "./lib/atoms";
 import "./index.css";
 
 export function App() {
   return (
     <>
-      <header class="mb-2 flex items-center gap-2">
-        <h1 class="text-3xl font-bold">Commenstudio</h1>
-        <nav>
+      <header class="mb-2 flex items-center justify-between gap-2">
+        <nav class="flex items-center gap-2">
+          <h1 class="inline-block text-3xl font-bold">Commenstudio</h1>
           <a
             href="https://github.com/mybearworld/commenstudio"
-            class="font-bold text-sky-600 hover:underline"
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
           >
             Github
           </a>
-          <span class="font-bold"> - </span>
           <a
             href="https://scratch.mit.edu/discuss/topic/717430"
-            class="font-bold text-sky-600 hover:underline"
+            class="font-bold text-sky-600 hover:underline dark:text-sky-500"
           >
             Topic
           </a>
         </nav>
+        <ThemeSwitch />
       </header>
       <div class="flex max-w-full gap-8">
         <div class="min-w-[theme(spacing.48)]">
@@ -44,6 +49,28 @@ export function App() {
   );
 }
 
+function ThemeSwitch() {
+  const [darkMode, setDarkMode] = useAtom(darkModeAtom);
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+  const handleClick = () => {
+    setDarkMode(!darkMode);
+  };
+  return (
+    <button
+      class="font-bold text-sky-600 hover:underline dark:text-sky-500"
+      onClick={handleClick}
+    >
+      {darkMode ? "Light mode" : "Dark mode"}
+    </button>
+  );
+}
+
 function ResetReadDate() {
   const [readTo, setReadTo] = useAtom(readToAtom);
 
@@ -59,7 +86,7 @@ function ResetReadDate() {
 
   return (
     <button
-      class="font-bold text-sky-600 hover:underline"
+      class="font-bold text-sky-600 hover:underline dark:text-sky-500"
       type="button"
       onClick={handleClick}
     >
@@ -89,7 +116,7 @@ function Notifications() {
     <>
       {notifications ? null : (
         <button
-          class="font-bold text-sky-600 hover:underline"
+          class="font-bold text-sky-600 hover:underline dark:text-sky-500"
           type="button"
           onClick={handleClick}
         >
