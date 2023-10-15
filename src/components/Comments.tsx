@@ -170,7 +170,11 @@ function Comment({
   const [pinnedComments, setPinnedComments] = useAtom(pinnedCommentsAtom);
   const pinReasonInput = useRef<HTMLInputElement>(null);
   const userLink = `https://scratch.mit.edu/users/${author.username}`;
-  const emojiContent = content
+  const linkifiedContent = linkifyHtml(content, {
+    className: "font-bold text-sky-600 hover:underline",
+    defaultProtocol: "https",
+  }).replace(/&amp;/g, "&");
+  const emojiContent = linkifiedContent
     .replace(/<img src="\/images\/emoji\/meow.png"/g, `<img src="${meow}"`)
     .replace(/<img src="\/images\/emoji\/gobo.png"/g, `<img src="${gobo}"`)
     .replace(/<img src="\/images\/emoji\/waffle.png"/g, `<img src="${waffle}"`)
@@ -179,10 +183,6 @@ function Comment({
       '<img src="https://scratch.mit.edu/images/emoji',
     )
     .replace(/<img/g, '<img class="inline-block max-w-[24px]"');
-  const finalContent = linkifyHtml(emojiContent, {
-    className: "font-bold text-sky-600 hover:underline",
-    defaultProtocol: "https",
-  });
   const createdDate = new Date(datetime_created);
   const isRead = createdDate.getTime() <= readTo;
   const pinEntry = pinnedComments.find((comment) => comment.id === id);
@@ -258,7 +258,7 @@ function Comment({
           <span class="italic">{studioName}</span>
         </span>
         <p
-          dangerouslySetInnerHTML={{ __html: finalContent }}
+          dangerouslySetInnerHTML={{ __html: emojiContent }}
           style={{ overflowWrap: "anywhere" }}
         ></p>
         <a
