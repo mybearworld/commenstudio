@@ -197,7 +197,7 @@ function Comment({
   };
 
   const handleMarkAsUnRead = () => {
-    setReadTo(createdDate.getTime());
+    setReadTo(0);
   };
   
   const handleTogglePin = () => {
